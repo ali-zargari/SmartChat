@@ -4,22 +4,17 @@
 	"version": "0.0.0",
 	"type": "module",
 	"scripts": {
-
 		"dev": "vite",
 		"build": "vite build",
 		"preview": "vite preview",
-
 		"build:webpack": "webpack",
 		"watch:webpack": "webpack --watch",
 		"start:webpack": "webpack serve --open",
 		"server:webpack": "node server.js",
-
 		"run_dist": "serve -s dist",
-
 		"lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
-		"fix_lint": "./node_modules/.bin/eslint --fix",
+		"fix_lint": "node_modules\\.bin\\eslint --fix",
 		"format": "prettier --write \"**/*\""
-
 	},
 	"dependencies": {
 		"express": "^4.18.2",
