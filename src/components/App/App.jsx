@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import "../../styles/App.css";
 
 function App() {
 	const [message, setMessage] = useState("");
@@ -11,19 +12,16 @@ function App() {
 				sender: "user",
 				text: message
 			};
+
 			setChatHistory(prevChatHistory => [...prevChatHistory, userMessage]);
 
 			try {
-				// Create a 'messages' array for the GPT-3 model
 				const messages = chatHistory.concat(userMessage).map(chat => ({
 					role: chat.sender,
 					content: chat.text
 				}));
 
-				//console.log(messages);
-
 				const response = await axios.post("http://localhost:3001/api/message/GPT", { messages });
-
 
 				const aiMessage = {
 					sender: "system",
