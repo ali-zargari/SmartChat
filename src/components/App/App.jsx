@@ -22,11 +22,12 @@ function App() {
 
 				//console.log(messages);
 
-				const response = await axios.post("http://localhost:3001/api/message", { messages });
+				const response = await axios.post("http://localhost:3001/api/message/GPT", { messages });
+
 
 				const aiMessage = {
 					sender: "system",
-					text: response.data.message.choices[0].message.content
+					text: response.data.choices[0].message.content
 				};
 
 				setChatHistory(prevChatHistory => [...prevChatHistory, aiMessage]);
@@ -41,7 +42,7 @@ function App() {
 
 	return (
 		<div>
-			<div>
+			<pre>
 				{
 					chatHistory.map((chat, index) => (
 						<p key={index} className={chat.sender}>
@@ -49,7 +50,7 @@ function App() {
 						</p>
 					))
 				}
-			</div>
+			</pre>
 			<input
 				type="text"
 				value={message}
