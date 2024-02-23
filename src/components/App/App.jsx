@@ -1,35 +1,63 @@
-import { useState } from "react";
-import reactLogo from "../../assets/icons/react.svg";
-import viteLogo from "../../assets/icons/vite.svg";
-import "../../styles/App.css";
+import React, { useState } from "react";
+import axios from "axios";
 
 function App() {
-	const [count, setCount] = useState(0);
+	const [message, setMessage] = useState("");
+	const [chatHistory, setChatHistory] = useState([]);
+
+	const sendMessage = async () => {
+		if (message.trim() !== "") {
+
+			const userMessage = {
+				sender: "user",
+				text: message
+			};
+			setChatHistory(prevChatHistory => [...prevChatHistory, userMessage]);
+
+			try {
+				const response = await axios.post("http://localhost:3001/api/message", {
+					message: message
+				});
+
+				//const aiMessage = response.data.message.choices[0].message;
+				const aiMessage = {
+					sender: "ai",
+					text: response.data.message.choices[0].message.content
+				};
+
+				console.log(aiMessage.text);
+				console.log(chatHistory);
+
+				setChatHistory(prevChatHistory => [...prevChatHistory, aiMessage]);
+
+
+			} catch (error) {
+				console.error("Error sending message:", error);
+			}
+
+			setMessage("");
+		}
+	};
 
 	return (
-		<>
+		<div>
 			<div>
-				<a href="https://vitejs.dev" target="_blank" rel="noopener noreferrer">
-					<img src={viteLogo} className="logo" alt="Vite logo" />
-				</a>
-				<a href="https://react.dev" target="_blank" rel="noopener noreferrer">
-					<img src={reactLogo} className="logo react" alt="React logo" />
-				</a>
+				{
+					chatHistory.map((chat, index) => (
+						<p key={index} className={chat.sender}>
+							{chat.text}
+						</p>
+					))
+				}
 			</div>
-
-			<h1>Vite + React</h1>
-			<div className="card">
-				<button onClick={() => setCount((count) => count + 1)}>
-					count is {count}
-				</button>
-				<p>
-					Edit <code>src/App.jsx</code> and save to test HMR
-				</p>
-			</div>
-			<p className="read-the-docs">
-				Click on the Vite and React logos to learn more
-			</p>
-		</>
+			<input
+				type="text"
+				value={message}
+				onChange={(e) => setMessage(e.target.value)}
+				onKeyPress={(e) => e.key === "Enter" && sendMessage()}
+			/>
+			<button onClick={sendMessage}>Send</button>
+		</div>
 	);
 }
 
