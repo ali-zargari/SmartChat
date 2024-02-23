@@ -1,29 +1,28 @@
 import express from "express";
-//import axios from "axios";
 import cors from "cors";
 import OpenAI from "openai";
 
-const openai = new OpenAI({ apiKey: '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' });
+const openai = new OpenAI({ apiKey: "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" });
 const app = express();
 const PORT = process.env.PORT || 3001;
 
 app.use(cors());
-
 app.use(express.json());
 
 console.log(process.env.OPENAI_API_KEY);
 
 app.post("/api/message", async (req, res) => {
-	const userMessage = req.body.message;
+	const { messages } = req.body;
+
+	console.log(messages);
+
 
 	try {
-
 		const completion = await openai.chat.completions.create({
-			messages: [{ role: "system", content: userMessage }],
+			messages: messages,
 			model: "gpt-3.5-turbo",
 		});
 
-		//console.log(completion);
 
 		res.json({ message: completion });
 	} catch (error) {

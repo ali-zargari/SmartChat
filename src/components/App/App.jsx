@@ -7,7 +7,6 @@ function App() {
 
 	const sendMessage = async () => {
 		if (message.trim() !== "") {
-
 			const userMessage = {
 				sender: "user",
 				text: message
@@ -15,21 +14,22 @@ function App() {
 			setChatHistory(prevChatHistory => [...prevChatHistory, userMessage]);
 
 			try {
-				const response = await axios.post("http://localhost:3001/api/message", {
-					message: message
-				});
+				// Create a 'messages' array for the GPT-3 model
+				const messages = chatHistory.concat(userMessage).map(chat => ({
+					role: chat.sender,
+					content: chat.text
+				}));
 
-				//const aiMessage = response.data.message.choices[0].message;
+				//console.log(messages);
+
+				const response = await axios.post("http://localhost:3001/api/message", { messages });
+
 				const aiMessage = {
-					sender: "ai",
+					sender: "system",
 					text: response.data.message.choices[0].message.content
 				};
 
-				console.log(aiMessage.text);
-				console.log(chatHistory);
-
 				setChatHistory(prevChatHistory => [...prevChatHistory, aiMessage]);
-
 
 			} catch (error) {
 				console.error("Error sending message:", error);
