@@ -40,11 +40,12 @@ function App() {
 
 				if(algorithm === "GPT") {
 					responseString = response.data.choices[0].message.content;
-
 				} else if(algorithm === "Gemini") {
 					//TODO: handle response from Gemini
-
+					responseString = response.data;
 				}
+
+				console.log("responseString: ", responseString);
 
 				const aiMessage = {
 					sender: "system",
