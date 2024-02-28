@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 //import OpenAI from "openai";
-import getGPTResponse from "./src/components/Handlers/GPTHandler.js";
+import getGPTResponse from "./src/components/Algorithm Handlers/GPTHandler.js";
 
 //const openai = new OpenAI({ apiKey: "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" });
 const app = express();

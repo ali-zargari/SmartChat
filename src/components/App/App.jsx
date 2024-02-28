@@ -5,6 +5,7 @@ import "../../styles/App.css";
 function App() {
 	const [message, setMessage] = useState("");
 	const [chatHistory, setChatHistory] = useState([]);
+	const [algorithm, setAlgorithm] = useState("GPT");
 
 	const sendMessage = async () => {
 		if (message.trim() !== "") {
@@ -38,8 +39,19 @@ function App() {
 		}
 	};
 
+	const handleAlgorithmChange = (e) => {
+		setAlgorithm(e.target.value);
+	};
+
 	return (
 		<div>
+			<h1>{algorithm}</h1> {/* Display the selected option */}
+
+			<select onChange={handleAlgorithmChange}>
+				<option value='Option 1'>Option 1</option>
+				<option value='Option 2'>Option 2</option>
+				<option value='Option 3'>Option 3</option>
+			</select>
 			<pre>
 				{
 					chatHistory.map((chat, index) => (
