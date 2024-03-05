@@ -3,6 +3,7 @@ import cors from "cors";
 //import OpenAI from "openai";
 import getGPTResponse from "./src/components/Algorithm Handlers/GPTHandler.js";
 import getGeminiResponse from "./src/components/Algorithm Handlers/GeminiHandler.js";
+import getClaudeResponse from "./src/components/Algorithm Handlers/ClaudeHandler.js";
 
 //const openai = new OpenAI({ apiKey: "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" });
 const app = express();
@@ -37,6 +38,20 @@ app.post("/api/message/Gemini", async (req, res) => {
 		res.status(500).json({ error: "Failed to fetch response from Gemini" });
 
 	 }
+});
+
+app.post("/api/message/Claude", async (req, res) => {
+	//console.log("messages: ", req.body.messages);
+
+	try{
+		const response = await getClaudeResponse(req.body.messages);
+		res.json(response);
+		//console.log("response: ", response);
+
+	} catch (error) {
+		res.status(500).json({ error: "Failed to fetch response from Claude" });
+	}
+
 });
 
 app.listen(PORT, () => {

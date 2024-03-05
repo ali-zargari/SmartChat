@@ -41,8 +41,9 @@ function App() {
 				if(algorithm === "GPT") {
 					responseString = response.data.choices[0].message.content;
 				} else if(algorithm === "Gemini") {
-					//TODO: handle response from Gemini
 					responseString = response.data;
+				} else if(algorithm === "Claude") {
+					responseString = response.data.content[0].text;
 				}
 
 				console.log("responseString: ", responseString);
