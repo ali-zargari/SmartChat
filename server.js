@@ -1,21 +1,36 @@
 import express from "express";
+import axios from "axios";
 import cors from "cors";
-//import OpenAI from "openai";
-import getGPTResponse from "./src/components/Algorithm Handlers/GPTHandler.js";
-import getGeminiResponse from "./src/components/Algorithm Handlers/GeminiHandler.js";
-import getClaudeResponse from "./src/components/Algorithm Handlers/ClaudeHandler.js";
+import getGPTResponse from "./src/Algorithm Handlers/GPTHandler.js";
+import getGeminiResponse from "./src/Algorithm Handlers/GeminiHandler.js";
+import getClaudeResponse from "./src/Algorithm Handlers/ClaudeHandler.js";
+import AuthenticationController from "./src/backend/controller.js";
 
-//const openai = new OpenAI({ apiKey: "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" });
 const app = express();
 const PORT = process.env.PORT || 3001;
 
 app.use(cors());
 app.use(express.json());
 
-//console.log(process.env.OPENAI_API_KEY);
+app.post("/login", async (req, res) => {
+
+	//console.log(""req.body.username);
+
+	let auth = new AuthenticationController();
+
+	try{
+		//res.redirect_uri = await auth.login(req);
+		//res.redirect("https://www.google.com");
+		//await axios.get("https://www.google.com");
+		//auth.google_login(req);
+		//console.log("redirect_uri: ", res.redirect_uri);
+	} catch (error) {
+		console.error("Error logging in:", error);
+	}
+
+});
 
 app.post("/api/message/GPT", async (req, res) => {
-
 
 	try {
 		const response = await getGPTResponse(req.body.messages);
@@ -24,20 +39,22 @@ app.post("/api/message/GPT", async (req, res) => {
 		// handle error
 		res.status(500).json({ error: "Failed to fetch response from OpenAI GPT" });
 	}
+
 });
 
 app.post("/api/message/Gemini", async (req, res) => {
 	//res.json({ message: "Gemini response" });
+	//console.log("messages: ", req.body.messages);
 
-	 try {
+	try {
 		const response = await getGeminiResponse(req.body.messages);
 		res.json(response);
-	 }
-	 catch (error) {
+	}
+	catch (error) {
 		// handle error
 		res.status(500).json({ error: "Failed to fetch response from Gemini" });
+	}
 
-	 }
 });
 
 app.post("/api/message/Claude", async (req, res) => {

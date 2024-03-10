@@ -11,11 +11,11 @@ export default async function getGPTResponse(messages) {
 			max_tokens: 2000,
 		});
 
-		console.log("OpenAI response:", completion);
+		//console.log("OpenAI response:", completion);
 
 		return completion;
 	} catch(error) {
-		console.error("OpenAI request failed:", error);
+		//console.error("OpenAI request failed:", error);
 		throw error;
 	}
 }

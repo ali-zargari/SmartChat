@@ -6,7 +6,7 @@ const anthropic = new Anthropic({
 
 export default async function getClaudeResponse(messages) {
 
-	console.log("messages: ", messages);
+	//console.log("messages: ", messages);
 
 	try {
 		const response = await anthropic.messages.create({

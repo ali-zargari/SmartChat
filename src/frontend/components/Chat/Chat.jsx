@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import "../../styles/App.css";
+import "../../styles/Chat.css";
 
 function App() {
 	const [message, setMessage] = useState("");

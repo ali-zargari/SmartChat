@@ -7,7 +7,7 @@ const __dirname = path.dirname(__filename);
 
 export default {
 	mode: "development",
-	entry: "./src/components/root/main.jsx",
+	entry: "./src/main.jsx",
 	output: {
 		path: path.resolve(__dirname, "dist"),
 		filename: "[name].[contenthash].bundle.js",
