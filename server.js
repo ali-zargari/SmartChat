@@ -1,10 +1,9 @@
 import express from "express";
-import axios from "axios";
 import cors from "cors";
 import getGPTResponse from "./src/Algorithm Handlers/GPTHandler.js";
 import getGeminiResponse from "./src/Algorithm Handlers/GeminiHandler.js";
 import getClaudeResponse from "./src/Algorithm Handlers/ClaudeHandler.js";
-import AuthenticationController from "./src/backend/controller.js";
+import Controller from "./src/backend/controller.js";
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -12,22 +11,11 @@ const PORT = process.env.PORT || 3001;
 app.use(cors());
 app.use(express.json());
 
-app.post("/login", async (req, res) => {
+app.post('/login', async (req, res) => {
+	let controller = new Controller();
+	await controller.loginWithEmailAndPassword(req, res);
 
-	//console.log(""req.body.username);
-
-	let auth = new AuthenticationController();
-
-	try{
-		//res.redirect_uri = await auth.login(req);
-		//res.redirect("https://www.google.com");
-		//await axios.get("https://www.google.com");
-		//auth.google_login(req);
-		//console.log("redirect_uri: ", res.redirect_uri);
-	} catch (error) {
-		console.error("Error logging in:", error);
-	}
-
+	//loginWithEmailAndPassword(req, res);
 });
 
 app.post("/api/message/GPT", async (req, res) => {

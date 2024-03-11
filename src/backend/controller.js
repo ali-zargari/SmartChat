@@ -1,90 +1,68 @@
-import * as firebase from "firebase/app";
+import { initializeApp } from "firebase/app";
 import "firebase/auth";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
+import axios from "axios";
 
-import { getAuth, signInWithCredential, GoogleAuthProvider } from "firebase/auth";
 
 
+class AppController{
+	constructor() {
+
+
+
+
+	}
+}
 
 class AuthenticationController {
 
 
 
 
-
 	constructor() {
-		this.idToken = googleUser.getAuthResponse().id_token;
-
-		this.credentials = GoogleAuthProvider.credential("785577679800-2d1uuoajkbn9p63cgfpt7lusj1qqsepq.apps.googleusercontent.com");
-
-		this.firebaseConfig = {
-			apiKey: "AIzaSyCitDTGf3iHRV50hW0fi_cIE1ChoKmIkmE",
-			authDomain: "smartchat-415203.firebaseapp.com",
-			projectId: "smartchat-415203",
-			storageBucket: "smartchat-415203.appspot.com",
-			messagingSenderId: "785577679800",
-			appId: "1:785577679800:web:ed7b5daa456f8736f74d4d",
-			measurementId: "G-PJQJVD18RG"
-		};
-
-		if (!firebase.getApps().length) {
-			firebase.initializeApp(this.firebaseConfig);
-		} else {
-			firebase.getApp();
-		}
-		//const app = firebase.initializeApp(firebaseConfig);
-
-		this.auth = getAuth();
-
-
-		signInWithCredential(this.auth, this.credential).catch((error) => {
-			// Handle Errors here.
-			const errorCode = error.code;
-			const errorMessage = error.message;
-			// The email of the user's account used.
-			const email = error.customData.email;
-			// The AuthCredential type that was used.
-			const credential = GoogleAuthProvider.credentialFromError(error);
-			// ...
-		});
-		/*
-
-
-
-
-		admin.initializeApp({
-			credential: admin.credential.cert(serviceAccount)
-		});
-
-		*/
-
-		//initializeAuth(firebaseConfig);
 
 	}
 
 
+	async loginWithEmailAndPassword(req, res) {
+		const { email, password } = req.body;
 
-	/*
-	// Sign up function
-	 async signUpUser (email, password) {
+		const db = pgp()({
+			host: 'ceu9lmqblp8t3q.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com',
+			port: 5432,
+			database: 'd5pkpgj13kfpht',
+			user: 'u4qk55uoqs21p8',
+			password: 'pda8b826e164179457d0f8cab3dfa1d43dc070ee1a0b11ae11b8ca0138c58441d'
+		});
 
-		try {
-			await auth().createUserWithEmailAndPassword(email, password);
-			console.log("User account created & signed in!");
-		} catch (error) {
-			if (error.code === "auth/email-already-in-use") {
-				console.log("That email address is already in use!");
-			}
+		const user = await db.one('SELECT * FROM SCUser WHERE email = $1', [email]);
 
-			if (error.code === "auth/invalid-email") {
-				console.log("That email address is invalid!");
-			}
-
-			console.error(error);
+		if (!user) {
+			return res.status(400).send({ message: 'User not found' });
 		}
-	};
 
-*/
+		const isMatch = await bcrypt.compare(password, user.password);
 
+		if (!isMatch) {
+			return res.status(400).send({ message: 'Invalid credentials' });
+		}
+
+		// Create a signed JWT
+		const token = jwt.sign({ email }, 'secret-key', { expiresIn: '1h' });
+
+		// Send JWT to the client
+		res.send({ token });
+	}
+
+	async signUpUser(email, password) {
+		try {
+			const response = await axios.post('https://your-heroku-app.com/register', { email, password });
+			return response.data;
+		} catch (error) {
+			console.error(error);
+			throw error;
+		}
+	}
 
 
 	async getGoogleToken() {

@@ -22,10 +22,11 @@ module.exports = {
 	},
 	plugins: ["react"],
 	rules: {
+		"no-unused-vars": "off",
 		indent: ["error", "tab"],
 		"linebreak-style": ["error", "windows"],
 		"react/react-in-jsx-scope": "off",
-		quotes: ["error", "double"],
+		quotes: "off",
 		semi: ["error", "always"],
 	},
 	settings: {
