@@ -13,8 +13,15 @@ app.use(express.json());
 
 app.post('/login', async (req, res) => {
 	let controller = new Controller();
-	await controller.loginWithEmailAndPassword(req, res);
+	//await controller.loginWithEmailAndPassword(req, res);
 
+	//loginWithEmailAndPassword(req, res);
+});
+
+app.post('/signup', async (req, res) => {
+	//let controller = new Controller();
+	//await controller.signUpUser(req, res);
+	console.log("server.js output: ", req.body.email);
 	//loginWithEmailAndPassword(req, res);
 });
 

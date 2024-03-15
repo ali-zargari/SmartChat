@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
-import Controller from "../../../backend/controller.js";
+import { ChatController, UserManager } from '../../../backend/controller.js';
+
 
 const Login = () => {
 
 
 
 
-	const controller = new Controller();
+	const controller = new UserManager();
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 
@@ -21,11 +22,21 @@ const Login = () => {
 
 	};
 
+	const handleSignUp = () => {
+		console.log("Sign Up");
+		//window.location.href = "/signup";
+		controller.signUpUser(email, password)
+			.then(r => console.log(r))
+			.catch(e => console.log(e));
+
+	};
+
 	const handleSubmit = (e) => {
 		e.preventDefault();
 		controller.loginWithEmailAndPassword(email, password)
 			.then(r => console.log(r))
 			.catch(e => console.log(e));
+
 	};
 
 
@@ -72,6 +83,8 @@ const Login = () => {
 						required
 					/>
 					<button type="submit">Login</button>
+					<button type="button" onClick={handleSignUp}>Sign Up</button>
+
 				</form>
 
 

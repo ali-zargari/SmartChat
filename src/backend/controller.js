@@ -5,59 +5,79 @@ import axios from "axios";
 
 
 
-class AppController{
+class ChatController{
 	constructor() {
 
 
 
 
 	}
+
+
+	async getGPTResponse(messages) {
+		// eslint-disable-next-line no-useless-catch
+		try {
+			const response = await axios.post("http://localhost:3001/api/message/GPT", { messages });
+			return response;
+		} catch (error) {
+			throw error;
+		}
+
+	}
+
+	async getGeminiResponse(messages) {
+		// eslint-disable-next-line no-useless-catch
+		try {
+			const response = await axios.post("http://localhost:3001/api/message/Gemini", { messages });
+			return response;
+		} catch (error) {
+			throw error;
+		}
+	}
+
+	async getClaudeResponse(messages) {
+		// eslint-disable-next-line no-useless-catch
+		try {
+			const response = await axios.post("http://localhost:3001/api/message/Claude", { messages });
+			return response;
+		} catch (error) {
+			throw error;
+		}
+
+	}
+
 }
 
-class AuthenticationController {
+class UserManager {
 
 
 
 
 	constructor() {
 
+
+
 	}
 
 
-	async loginWithEmailAndPassword(req, res) {
-		const { email, password } = req.body;
+	async loginWithEmailAndPassword(email, pass) {
+		//const { email, password } = req.body;
+		console.log("email: ", email);
+		console.log("password: ", pass);
 
-		const db = pgp()({
-			host: 'ceu9lmqblp8t3q.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com',
-			port: 5432,
-			database: 'd5pkpgj13kfpht',
-			user: 'u4qk55uoqs21p8',
-			password: 'pda8b826e164179457d0f8cab3dfa1d43dc070ee1a0b11ae11b8ca0138c58441d'
-		});
 
-		const user = await db.one('SELECT * FROM SCUser WHERE email = $1', [email]);
 
-		if (!user) {
-			return res.status(400).send({ message: 'User not found' });
-		}
 
-		const isMatch = await bcrypt.compare(password, user.password);
 
-		if (!isMatch) {
-			return res.status(400).send({ message: 'Invalid credentials' });
-		}
-
-		// Create a signed JWT
-		const token = jwt.sign({ email }, 'secret-key', { expiresIn: '1h' });
-
-		// Send JWT to the client
-		res.send({ token });
 	}
 
 	async signUpUser(email, password) {
 		try {
-			const response = await axios.post('https://your-heroku-app.com/register', { email, password });
-			return response.data;
+			const response = await axios.post('http://localhost:3001/signup', { email, password });
+
+			console.log("response: ", response);
+
+
 		} catch (error) {
 			console.error(error);
 			throw error;
@@ -93,4 +113,4 @@ class AuthenticationController {
 	}
 }
 
-export default AuthenticationController;
+export  {UserManager, ChatController};
