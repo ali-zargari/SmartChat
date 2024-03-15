@@ -3,7 +3,6 @@ import cors from "cors";
 import getGPTResponse from "./src/Algorithm Handlers/GPTHandler.js";
 import getGeminiResponse from "./src/Algorithm Handlers/GeminiHandler.js";
 import getClaudeResponse from "./src/Algorithm Handlers/ClaudeHandler.js";
-import Controller from "./src/backend/controller.js";
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -12,7 +11,12 @@ app.use(cors());
 app.use(express.json());
 
 app.post('/login', async (req, res) => {
-	let controller = new Controller();
+	//await controller.loginWithEmailAndPassword(req, res);
+
+	//loginWithEmailAndPassword(req, res);
+});
+
+app.post('/login_email', async (req, res) => {
 	//await controller.loginWithEmailAndPassword(req, res);
 
 	//loginWithEmailAndPassword(req, res);

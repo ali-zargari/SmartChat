@@ -1,16 +1,17 @@
 import React, { useState } from "react";
 import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
-import { ChatController, UserManager } from '../../../backend/controller.js';
+import { Controller, UserManager } from '../../../backend/controller.js';
+import  '../../../backend/authenticator.js';
+import Authenticator from "../../../backend/authenticator.js";
+
 
 
 const Login = () => {
 
-
-
-
 	const controller = new UserManager();
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
+	const authenticator = new Authenticator();
 
 	const handleEmailChange = (e) => {
 		setEmail(e.target.value);
@@ -25,7 +26,7 @@ const Login = () => {
 	const handleSignUp = () => {
 		console.log("Sign Up");
 		//window.location.href = "/signup";
-		controller.signUpUser(email, password)
+		authenticator.signUpUser(email, password)
 			.then(r => console.log(r))
 			.catch(e => console.log(e));
 
@@ -33,10 +34,14 @@ const Login = () => {
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		controller.loginWithEmailAndPassword(email, password)
-			.then(r => console.log(r))
+		const url = authenticator.getGoogleToken()
+			.then(r => {
+				console.log(r);
+			})
 			.catch(e => console.log(e));
 
+		window.location.href = url;
+		console.log("url: ", url);
 	};
 
 

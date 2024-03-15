@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import "../../styles/Chat.css";
-import { UserManager, ChatController } from '../../../backend/controller.js';
+import { UserManager, Controller } from '../../../backend/controller.js';
 
 
 function App() {
@@ -9,7 +9,7 @@ function App() {
 	const [chatHistory, setChatHistory] = useState([]);
 	const [algorithm, setAlgorithm] = useState("GPT");
 
-	const controller = new ChatController();
+	const controller = new Controller();
 
 	const sendMessage = async () => {
 		if (message.trim() !== "") {
@@ -25,9 +25,13 @@ function App() {
 				content: chat.text
 			}));
 
+
+
+
 			let response = "response_string";
 
 			if(algorithm === "GPT") {
+				//response = await axios.post("http://localhost:3001/api/message/GPT", { messages });
 				response = await controller.getGPTResponse(messages);
 			}
 			else if(algorithm === "Gemini") {
