@@ -4,7 +4,7 @@ import "../../styles/Chat.css";
 import { UserManager, Controller } from '../../../backend/controller.js';
 
 
-function App() {
+function Chat() {
 	const [message, setMessage] = useState("");
 	const [chatHistory, setChatHistory] = useState([]);
 	const [algorithm, setAlgorithm] = useState("GPT");
@@ -101,4 +101,4 @@ function App() {
 	);
 }
 
-export default App;
+export default Chat;

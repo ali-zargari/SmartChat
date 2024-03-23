@@ -34,14 +34,21 @@ const Login = () => {
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		const url = authenticator.getGoogleToken()
+		/*const url = authenticator.getGoogleToken()
 			.then(r => {
-				console.log(r);
+				window.location.href = r;
+				//console.log(r);
 			})
 			.catch(e => console.log(e));
+*/
 
-		window.location.href = url;
-		console.log("url: ", url);
+		const url = authenticator.loginWithGoogle()
+			.then(r => console.log(r))
+			.catch(e => console.log(e));
+
+		//console.log(authenticator.loginWithGoogle());
+
+		//console.log("url: ", url);
 	};
 
 

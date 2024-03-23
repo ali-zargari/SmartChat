@@ -23,7 +23,7 @@ module.exports = {
 	plugins: ["react"],
 	rules: {
 		"no-unused-vars": "off",
-		indent: ["error", "tab"],
+		indent: "off",
 		"linebreak-style": ["error", "windows"],
 		"react/react-in-jsx-scope": "off",
 		quotes: "off",

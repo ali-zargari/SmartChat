@@ -1,19 +1,12 @@
 import axios from "axios";
 
+
 class Authenticator {
 	constructor() {
-		this.authenticated = false;
+		//this.OA2Client = new OAuth2Client();
 	}
 
-	authenticate() {
-		this.authenticated = true;
-	}
-
-	isAuthenticated() {
-		return this.authenticated;
-	}
-
-	async login(email, password) {
+	async login_email(email, password) {
 		//const { email, password } = req.body;
 		// eslint-disable-next-line no-useless-catch
 		try {
@@ -24,29 +17,14 @@ class Authenticator {
 		}
 	}
 
-	async signUp(email, password) {
-		// eslint-disable-next-line no-useless-catch
-		try {
-			const response = await axios.post("http://localhost:3001/signup", { email, password });
-			return response;
-		} catch (error) {
-			throw error;
+
+	async ensureAuthenticated(req, res, next) {
+		if (req.isAuthenticated()) {
+			return next(); // If the user is authenticated, allow them to proceed
 		}
-	}
-
-
-
-	/*
- * Create form to request access token from Google's OAuth 2.0 server.
- */
-
-
-
-	async loginWithEmailAndPassword(email, pass) {
-		//const { email, password } = req.body;
-		console.log("email: ", email);
-		console.log("password: ", pass);
-
+		// If not authenticated, redirect to the login page
+		// Or you can send a response instead, like a 403 forbidden error
+		return res.redirect('/login');
 	}
 
 	async signUpUser(email, password) {
@@ -63,35 +41,24 @@ class Authenticator {
 	}
 
 
-	async getGoogleToken() {
+	async loginWithGoogle() {
 
-		let oauth2Endpoint = "https://accounts.google.com/o/oauth2/v2/auth";
+		let url = "";
 
-		// Parameters to pass to OAuth 2.0 endpoint.
-		let params = {
-			"client_id": "785577679800-2d1uuoajkbn9p63cgfpt7lusj1qqsepq.apps.googleusercontent.com", // replace with your client ID
-			"redirect_uri": encodeURIComponent("https://localhost:8080/chat"), // replace with your redirect URI
-			"response_type": "token",
-			"scope": encodeURIComponent("https://www.googleapis.com/auth/drive.metadata.readonly"),
-			"include_granted_scopes": "true",
-			"state": "pass-through_value"
-		};
+		axios.get(`http://localhost:3001/prepare-auth/google`)
+			.then(response => {
+				// Assuming the response contains the URL to redirect to for Google OAuth
+				url = response.data;
+				//window.location.href = url;
+				console.log("authUrl: ", url);
+			})
+			.catch(error => {
+				console.error('Error preparing for Google authentication:', error);
+				// Handle error (show message, log error, etc.)
+			});
+		//console.log("authUrl: ", url);
 
-		// Convert the parameters object into url query
-		let query = Object.keys(params).map(k => {
-			return k + "=" + params[k];
-		}).join("&");
-
-		// Full URL
-		let url = oauth2Endpoint + "?" + query;
-
-
-		console.log("url: ", url);
-
-		// Also return the generated URL in case you want to use it elsewhere
-		return url;
 	}
-
 
 
 }
