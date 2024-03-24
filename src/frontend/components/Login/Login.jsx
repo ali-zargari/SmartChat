@@ -34,21 +34,18 @@ const Login = () => {
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		/*const url = authenticator.getGoogleToken()
-			.then(r => {
-				window.location.href = r;
-				//console.log(r);
-			})
-			.catch(e => console.log(e));
-*/
 
 		const url = authenticator.loginWithGoogle()
-			.then(r => console.log(r))
-			.catch(e => console.log(e));
+			.then(
+				r => {
+					//console.log(r);
+					console.log("url: ", r);
+				}
+			)
+			.catch(
+				e => console.log(e)
+			);
 
-		//console.log(authenticator.loginWithGoogle());
-
-		//console.log("url: ", url);
 	};
 
 
@@ -72,10 +69,7 @@ const Login = () => {
 
 
 	return (
-		<GoogleOAuthProvider
-			clientId="785577679800-2d1uuoajkbn9p63cgfpt7lusj1qqsepq.apps.googleusercontent.com"
-			redirectUri="http://localhost:3000"
-		>
+
 			<div>
 				<h1>Login Page</h1>
 
@@ -99,16 +93,7 @@ const Login = () => {
 
 				</form>
 
-
-				<GoogleLogin
-					clientId="785577679800-2d1uuoajkbn9p63cgfpt7lusj1qqsepq.apps.googleusercontent.com"
-					buttonText="Login with Google"
-					onSuccess={handleSuccess}
-					onFailure={handleFailure}
-					cookiePolicy={"single_host_origin"}
-				/>
 			</div>
-		</GoogleOAuthProvider>
 	);
 };
 

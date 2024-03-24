@@ -2,13 +2,20 @@ import React, { useState } from "react";
 import axios from "axios";
 import "../../styles/Chat.css";
 import { UserManager, Controller } from '../../../backend/controller.js';
+import { useNavigate } from "react-router-dom";
 
 
 function Chat() {
+	const navigate = useNavigate();
+	const isAuthenticated = false;
+	if (!isAuthenticated) {
+		navigate("/");
+	}
+
+
 	const [message, setMessage] = useState("");
 	const [chatHistory, setChatHistory] = useState([]);
 	const [algorithm, setAlgorithm] = useState("GPT");
-
 	const controller = new Controller();
 
 	const sendMessage = async () => {
