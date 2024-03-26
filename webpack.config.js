@@ -3,6 +3,10 @@ import path from "path";
 import { fileURLToPath, resolve } from "url";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 
+import pathBrowserify from 'path-browserify';
+import osBrowserify from 'os-browserify/browser.js';
+import cryptoBrowserify from 'crypto-browserify';
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -44,9 +48,17 @@ export default {
 	},
 	resolve: {
 		extensions: ["*", ".js", ".jsx"],
+		fallback: {
+			"path": false,
+			"os": false,
+			"crypto": false
+		}
 
 	},
 	plugins: [
+		new webpack.DefinePlugin({
+			'process.env': JSON.stringify(process.env)
+		}),
 		new HtmlWebpackPlugin({
 			template: path.resolve(__dirname, "index.html"),
 		}),

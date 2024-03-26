@@ -6,9 +6,11 @@ import getClaudeResponse from "./src/backend/Algorithm Handlers/ClaudeHandler.js
 import passport from 'passport';
 import session from "express-session";
 import crypto from 'crypto';
-import dotenv from 'dotenv';
+
 import jwt from 'jsonwebtoken';
 import {google} from 'googleapis';
+
+
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -19,7 +21,7 @@ const sessionSecret = process.env.SESSION_SECRET;
 
 
 
-dotenv.config();
+//dotenv.config({ path: '.env' });
 
 app.use(cors());
 app.use(express.json());

@@ -1,5 +1,9 @@
 // file: gpt3Handler.js
 import { OpenAI } from "openai";
+import dotenv from 'dotenv';
+dotenv.config();
+
+console.log("HAHA", process.env.OPENAI_API_KEY);
 
 const openai = new OpenAI({
 	apiKey: process.env.OPENAI_API_KEY
