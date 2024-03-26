@@ -3,20 +3,22 @@ import axios from "axios";
 import "../../styles/Chat.css";
 import { UserManager, Controller } from '../../../backend/controller.js';
 import { useNavigate } from "react-router-dom";
+import { useLocation } from 'react-router-dom';
+import { useContext } from 'react';
+import { AuthContext } from '../../../AuthContext'; // Update the path
+
 
 
 function Chat() {
-	const navigate = useNavigate();
-	const isAuthenticated = false;
-	if (!isAuthenticated) {
-		navigate("/");
-	}
-
 
 	const [message, setMessage] = useState("");
 	const [chatHistory, setChatHistory] = useState([]);
 	const [algorithm, setAlgorithm] = useState("GPT");
 	const controller = new Controller();
+	const { authToken } = useContext(AuthContext);
+
+
+	console.log("Access Token: ", authToken);
 
 	const sendMessage = async () => {
 		if (message.trim() !== "") {
