@@ -8,7 +8,7 @@ import {
 } from "@google/generative-ai";
 
 const MODEL_NAME = "gemini-1.0-pro";
-const API_KEY = "AIzaSyAEs33hp7CZ0VGkcbe47HrIO6HvoDeb4Mc";
+const API_KEY = process.env.GEMINI_API_KEY;
 
 export default async function getGeminiResponse(messages) {
 	const genAI = new GoogleGenerativeAI(API_KEY);

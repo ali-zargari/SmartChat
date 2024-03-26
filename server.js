@@ -1,8 +1,8 @@
 import express from "express";
 import cors from "cors";
-import getGPTResponse from "./src/Algorithm Handlers/GPTHandler.js";
-import getGeminiResponse from "./src/Algorithm Handlers/GeminiHandler.js";
-import getClaudeResponse from "./src/Algorithm Handlers/ClaudeHandler.js";
+import getGPTResponse from "./src/backend/Algorithm Handlers/GPTHandler.js";
+import getGeminiResponse from "./src/backend/Algorithm Handlers/GeminiHandler.js";
+import getClaudeResponse from "./src/backend/Algorithm Handlers/ClaudeHandler.js";
 import passport from 'passport';
 import session from "express-session";
 import crypto from 'crypto';
@@ -53,7 +53,7 @@ app.get('/auth/google', (req, res) => {
 
 	// Parameters to pass to OAuth 2.0 endpoint.
 	let params = {
-		"client_id": "785577679800-2d1uuoajkbn9p63cgfpt7lusj1qqsepq.apps.googleusercontent.com", // replace with your client ID
+		"client_id": process.env.GOOGLE_CLIENT_ID, // replace with your client ID
 		"redirect_uri": encodeURIComponent("http://localhost:8080/bridge"), // replace with your redirect URI
 		"response_type": "token",
 		"scope": encodeURIComponent("https://www.googleapis.com/auth/drive.metadata.readonly"),
