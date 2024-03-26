@@ -1,7 +1,7 @@
 import Anthropic from "@anthropic-ai/sdk";
 
 const anthropic = new Anthropic({
-	apiKey: "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",
+	apiKey: process.env.ANTHROPIC_API_KEY,
 });
 
 export default async function getClaudeResponse(messages) {
