@@ -1,5 +1,3 @@
 export function UserContext() {
-	return (
-		<></>
-	);
+	return <></>;
 }
