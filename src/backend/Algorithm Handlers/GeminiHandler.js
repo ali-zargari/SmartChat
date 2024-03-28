@@ -17,7 +17,10 @@ export default async function getGeminiResponse(messages) {
 	//console.log("messages: ", messages);
 
 	const roles = ["user", "model"];
-	const partsArray = ["Hello, I have 2 dogs in my house.", "Great to meet you. What would you like to know?"];
+	const partsArray = [
+		"Hello, I have 2 dogs in my house.",
+		"Great to meet you. What would you like to know?",
+	];
 
 	const messagesArray = roles.map((role, index) => {
 		return {
@@ -25,7 +28,6 @@ export default async function getGeminiResponse(messages) {
 			parts: partsArray[index],
 		};
 	});
-
 
 	const test = messages.map((msg, index) => {
 		return {
@@ -59,13 +61,10 @@ export default async function getGeminiResponse(messages) {
 	console.log("working message", messagesArray);
 
 	const chat = model.startChat({
-
 		history: messagesArray,
 
 		// add safety settings
-		safety: safetySettings
-
-
+		safety: safetySettings,
 	});
 
 	const result = await chat.sendMessage(messages[0].content);
@@ -73,5 +72,3 @@ export default async function getGeminiResponse(messages) {
 	console.log(response.promptFeedback);
 	return response.text();
 }
-
-

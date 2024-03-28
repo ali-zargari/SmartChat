@@ -3,31 +3,32 @@ import cors from "cors";
 import getGPTResponse from "./src/backend/Algorithm Handlers/GPTHandler.js";
 import getGeminiResponse from "./src/backend/Algorithm Handlers/GeminiHandler.js";
 import getClaudeResponse from "./src/backend/Algorithm Handlers/ClaudeHandler.js";
-import passport from 'passport';
+import passport from "passport";
 import session from "express-session";
-import crypto from 'crypto';
-import dotenv from 'dotenv';
-import jwt from 'jsonwebtoken';
-import {google} from 'googleapis';
-
-const app = express();
-const PORT = process.env.PORT || 3001;
-const secret = crypto.randomBytes(64).toString('hex');
-const sessionSecret = process.env.SESSION_SECRET;
-
-
-
-
+import crypto from "crypto";
+import dotenv from "dotenv";
+import { google } from "googleapis";
 
 dotenv.config();
 
+const app = express();
+const PORT = process.env.PORT || 3001;
+const secret = crypto.randomBytes(64).toString("hex");
+const oauth2Client = new google.auth.OAuth2(
+	process.env.GOOGLE_CLIENT_ID,
+	process.env.GOOGLE_CLIENT_SECRET,
+	"http://localhost:8080/bridge",
+);
+
 app.use(cors());
 app.use(express.json());
-app.use(session({
-	secret: secret,
-	resave: false,
-	saveUninitialized: true,
-}));
+app.use(
+	session({
+		secret: secret,
+		resave: false,
+		saveUninitialized: true,
+	}),
+);
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -35,9 +36,8 @@ app.use(passport.session());
 passport.serializeUser((user, done) => done(null, user));
 passport.deserializeUser((obj, done) => done(null, obj));
 
-
 // Test route to confirm session works
-app.get('/bridge', (req, res) => {
+app.get("/bridge", (req, res) => {
 	// The `code` is returned as a query parameter in the redirect
 	const { code } = req.query;
 	console.log("code: ", code);
@@ -45,39 +45,38 @@ app.get('/bridge', (req, res) => {
 	res.send("code: " + code);
 });
 
-
-app.get('/auth/google', (req, res) => {
-
+app.get("/auth/google", (req, res) => {
 	// Construct the OAuth URL or perform any prior logic needed
 	let oauth2Endpoint = "https://accounts.google.com/o/oauth2/v2/auth";
 
-	// Parameters to pass to OAuth 2.0 endpoint.
-	let params = {
-		"client_id": process.env.GOOGLE_CLIENT_ID, // replace with your client ID
-		"redirect_uri": encodeURIComponent("http://localhost:8080/bridge"), // replace with your redirect URI
-		"response_type": "token",
-		"scope": encodeURIComponent("https://www.googleapis.com/auth/drive.metadata.readonly"),
-		"include_granted_scopes": "true",
-		"state": "pass-through_value"
-	};
 
-	// Convert the parameters object into url query
-	let query = Object.keys(params).map(k => {
-		return k + "=" + params[k];
-	}).join("&");
 
-	// Full URL
-	let url = oauth2Endpoint + "?" + query;
+	const scopes = ["https://www.googleapis.com/auth/drive.metadata.readonly"];
 
-	console.log("url: ", url);
-	//res.writeHead(301, { "Location": url });
+	const authUrl = oauth2Client.generateAuthUrl({
+		access_type: "offline",
+		scope: scopes,
+		include_granted_scopes: true,
+	});
 
-	res.json( url );
+	res.json(authUrl);
+
 });
 
+app.post("/auth/google/callback", async (req, res) => {
+	// The `code` is returned as a query parameter in the redirect
+	const code = req.body.code;
+	console.log("req: ", code);
+
+	let { tokens } = await oauth2Client.getToken(code);
+	oauth2Client.setCredentials(tokens);
 
 
-app.post('/signup', async (req, res) => {
+	res.send(tokens);
+
+});
+
+app.post("/signup", async (req, res) => {
 	//let controller = new Controller();
 	//await controller.signUpUser(req, res);
 	console.log("server.js output: ", req.body.email);
@@ -87,7 +86,6 @@ app.post('/signup', async (req, res) => {
 
 
 app.post("/api/message/GPT", async (req, res) => {
-
 	try {
 		const response = await getGPTResponse(req.body.messages);
 		res.json(response);
@@ -95,10 +93,7 @@ app.post("/api/message/GPT", async (req, res) => {
 		// handle error
 		res.status(500).json({ error: "Failed to fetch response from OpenAI GPT" });
 	}
-
 });
-
-
 
 app.post("/api/message/Gemini", async (req, res) => {
 	//res.json({ message: "Gemini response" });
@@ -107,34 +102,24 @@ app.post("/api/message/Gemini", async (req, res) => {
 	try {
 		const response = await getGeminiResponse(req.body.messages);
 		res.json(response);
-	}
-	catch (error) {
+	} catch (error) {
 		// handle error
 		res.status(500).json({ error: "Failed to fetch response from Gemini" });
 	}
-
 });
-
-
 
 app.post("/api/message/Claude", async (req, res) => {
 	//console.log("messages: ", req.body.messages);
 
-	try{
+	try {
 		const response = await getClaudeResponse(req.body.messages);
 		res.json(response);
 		//console.log("response: ", response);
-
 	} catch (error) {
 		res.status(500).json({ error: "Failed to fetch response from Claude" });
 	}
-
 });
-
-
 
 app.listen(PORT, () => {
 	console.log(`Server is running on port ${PORT}`);
 });
-
-

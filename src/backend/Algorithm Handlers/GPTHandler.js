@@ -1,12 +1,14 @@
 // file: gpt3Handler.js
 import { OpenAI } from "openai";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const openai = new OpenAI({
-	apiKey: process.env.OPENAI_API_KEY
+	apiKey: process.env.OPENAI_API_KEY,
 });
 
 export default async function getGPTResponse(messages) {
-
 	const completion = await openai.chat.completions.create({
 		messages: messages,
 		model: "gpt-3.5-turbo",
@@ -16,5 +18,4 @@ export default async function getGPTResponse(messages) {
 	//console.log("OpenAI response:", completion);
 
 	return completion;
-
 }
