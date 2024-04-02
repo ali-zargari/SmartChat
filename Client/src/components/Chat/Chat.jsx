@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-//import axios from "axios";
+import axios from "axios";
 import "../../styles/Chat.css";
-//import { UserManager, Controller } from "../../../../Server/backend/controller.js";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { useContext } from "react";
@@ -33,13 +32,13 @@ function Chat() {
 			let response = "response_string";
 
 			if (algorithm === "GPT") {
-				//response = await axios.post("http://localhost:3001/api/message/GPT", { messages });
+				response = await axios.post("http://localhost:3001/api/message/GPT", { messages });
 				//response = await controller.getGPTResponse(messages);
 			} else if (algorithm === "Gemini") {
-				//response = await axios.post("http://localhost:3001/api/message/Gemini", { messages });
+				response = await axios.post("http://localhost:3001/api/message/Gemini", { messages });
 				//response = await controller.getGeminiResponse(messages);
 			} else if (algorithm === "Claude") {
-				//response = await axios.post("http://localhost:3001/api/message/Claude", { messages });
+				response = await axios.post("http://localhost:3001/api/message/Claude", { messages });
 				//response = await controller.getClaudeResponse(messages);
 			}
 

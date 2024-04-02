@@ -1,29 +1,30 @@
-import Anthropic from "@anthropic-ai/sdk";
+var Anthropic = require("@anthropic-ai/sdk").default;
 
-const anthropic = new Anthropic({
+var anthropic = new Anthropic({
 	apiKey: process.env.ANTHROPIC_API_KEY,
 });
 
-export default async function getClaudeResponse(messages) {
-	//console.log("messages: ", messages);
-
+function getClaudeResponse(messages, callback) {
 	try {
-		const response = await anthropic.messages.create({
+		anthropic.messages.create({
 			model: "claude-3-opus-20240229",
 			max_tokens: 1024,
 			messages: [
 				{
 					role: "user",
-					content: messages.map((message) => message.content).join(" "),
+					content: messages.map(function(message) { return message.content; }).join(" "),
 				},
 			],
+		}).then(function(response) {
+			callback(null, response);
+		}).catch(function(error) {
+			console.error("Anthropic request failed:", error);
+			callback(error);
 		});
-
-		//console.log("Anthropic response:", response);
-
-		return response;
 	} catch (error) {
-		console.error("Anthropic request failed:", error);
-		throw error;
+		console.error("Caught error:", error);
+		callback(error);
 	}
 }
+
+module.exports = getClaudeResponse;

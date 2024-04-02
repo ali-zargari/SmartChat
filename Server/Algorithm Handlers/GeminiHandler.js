@@ -1,42 +1,35 @@
-// node --version # Should be >= 18
-// npm install @google/generative-ai
+var GoogleGenerativeAI = require("@google/generative-ai").GoogleGenerativeAI;
+var HarmCategory = require("@google/generative-ai").HarmCategory;
+var HarmBlockThreshold = require("@google/generative-ai").HarmBlockThreshold;
 
-import {
-	GoogleGenerativeAI,
-	HarmCategory,
-	HarmBlockThreshold,
-} from "@google/generative-ai";
+var MODEL_NAME = "gemini-1.0-pro";
+var API_KEY = process.env.GEMINI_API_KEY;
 
-const MODEL_NAME = "gemini-1.0-pro";
-const API_KEY = process.env.GEMINI_API_KEY;
+function getGeminiResponse(messages, callback) {
+	var genAI = new GoogleGenerativeAI(API_KEY);
+	var model = genAI.getGenerativeModel({ model: MODEL_NAME });
 
-export default async function getGeminiResponse(messages) {
-	const genAI = new GoogleGenerativeAI(API_KEY);
-	const model = genAI.getGenerativeModel({ model: MODEL_NAME });
-
-	//console.log("messages: ", messages);
-
-	const roles = ["user", "model"];
-	const partsArray = [
+	var roles = ["user", "model"];
+	var partsArray = [
 		"Hello, I have 2 dogs in my house.",
 		"Great to meet you. What would you like to know?",
 	];
 
-	const messagesArray = roles.map((role, index) => {
+	var messagesArray = roles.map(function(role, index) {
 		return {
 			role: role,
 			parts: partsArray[index],
 		};
 	});
 
-	const test = messages.map((msg, index) => {
+	var test = messages.map(function(msg, index) {
 		return {
 			role: index % 2 === 0 ? "user" : "model",
 			parts: msg.content,
 		};
 	});
 
-	const safetySettings = [
+	var safetySettings = [
 		{
 			category: HarmCategory.HARM_CATEGORY_HARASSMENT,
 			threshold: HarmBlockThreshold.BLOCK_NONE,
@@ -55,20 +48,22 @@ export default async function getGeminiResponse(messages) {
 		},
 	];
 
-	//console.log("test: ", test);
 	console.log("test: ", test);
-
 	console.log("working message", messagesArray);
 
-	const chat = model.startChat({
+	var chat = model.startChat({
 		history: messagesArray,
-
-		// add safety settings
 		safety: safetySettings,
 	});
 
-	const result = await chat.sendMessage(messages[0].content);
-	const response = result.response;
-	console.log(response.promptFeedback);
-	return response.text();
+	chat.sendMessage(messages[0].content).then(function(result) {
+		var response = result.response;
+		console.log(response.promptFeedback);
+		callback(null, response.text());
+	}).catch(function(error) {
+		console.error("Error sending message:", error);
+		callback(error);
+	});
 }
+
+module.exports = getGeminiResponse;
