@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import React, { useEffect, useContext } from "react";
-import { AuthContext } from "../../../AuthContext"; // Update the path based on your project structure
+import { AuthContext } from "../../AuthContext.jsx"; // Update the path based on your project structure
 import axios from "axios";
 
 export function Bridge() {

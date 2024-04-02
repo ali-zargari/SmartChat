@@ -1,21 +1,18 @@
 import React, { useState } from "react";
 import { Redirect } from "react-router-dom";
 import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
-import { Controller, UserManager } from "../../../backend/controller.js";
-import "../../../backend/authenticator.js";
-import Authenticator from "../../../backend/authenticator.js";
 import http from "http";
 
 const Login = () => {
-	const controller = new UserManager();
+	//const controller = new UserManager();
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
-	const authenticator = new Authenticator();
+	//const authenticator = new Authenticator();
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
 
-		const url = authenticator
+		/*const url = authenticator
 			.continueWithGoogle()
 			.then((r) => {
 				console.log("url: ", r.data);
@@ -23,9 +20,9 @@ const Login = () => {
 			})
 			.catch((e) => {
 				console.log(e);
-			});
+			});*/
 
-		console.log(url);
+		//console.log(url);
 	};
 
 	return (

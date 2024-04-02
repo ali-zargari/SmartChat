@@ -1,8 +1,8 @@
 import express from "express";
 import cors from "cors";
-import getGPTResponse from "./src/backend/Algorithm Handlers/GPTHandler.js";
-import getGeminiResponse from "./src/backend/Algorithm Handlers/GeminiHandler.js";
-import getClaudeResponse from "./src/backend/Algorithm Handlers/ClaudeHandler.js";
+import getGPTResponse from "./Algorithm Handlers/GPTHandler.js";
+import getGeminiResponse from "./Algorithm Handlers/GeminiHandler.js";
+import getClaudeResponse from "./Algorithm Handlers/ClaudeHandler.js";
 import passport from "passport";
 import session from "express-session";
 import crypto from "crypto";
