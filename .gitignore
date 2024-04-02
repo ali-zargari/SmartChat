@@ -6,7 +6,7 @@
 /build
 
 # Environment variables
-.env
+Server/.env
 
 # System Files
 .DS_Store

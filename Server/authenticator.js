@@ -1,25 +1,8 @@
 import axios from "axios";
 
 class Authenticator {
-
-
 	constructor() {
 		this.authnum = null;
-	}
-
-
-	async signUpUser(email, password) {
-		try {
-			const response = await axios.post("http://localhost:3001/signup", {
-				email,
-				password,
-			});
-
-			console.log("response: ", response);
-		} catch (error) {
-			console.error(error);
-			throw error;
-		}
 	}
 
 	async continueWithGoogle() {

@@ -3,7 +3,6 @@ import path from "path";
 import { fileURLToPath, resolve } from "url";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -28,6 +27,16 @@ export default {
 		rules: [
 			{
 				test: /\.(js|jsx)$/,
+				exclude: path.resolve(__dirname, 'src/backend'),
+				use: {
+					loader: 'babel-loader',
+					options: {
+						presets: ['@babel/preset-env', '@babel/preset-react']
+					}
+				}
+			},
+			{
+				test: /\.(js|jsx)$/,
 				exclude: /node_modules/,
 				use: ["babel-loader"],
 			},
@@ -44,8 +53,8 @@ export default {
 	resolve: {
 		extensions: ["*", ".js", ".jsx"],
 		fallback: {
-			http: false
-		}
+			http: false,
+		},
 	},
 	plugins: [
 		new HtmlWebpackPlugin({

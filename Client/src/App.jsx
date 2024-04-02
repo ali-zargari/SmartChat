@@ -5,9 +5,9 @@ import {
 	Route,
 	Navigate,
 } from "react-router-dom";
-import LoginComponent from "./frontend/components/Login/Login.jsx";
-import ChatComponent from "./frontend/components/Chat/Chat.jsx";
-import Bridge from "./frontend/components/Bridge/Bridge.jsx";
+import LoginComponent from "./components/Login/Login.jsx";
+import ChatComponent from "./components/Chat/Chat.jsx";
+import Bridge from "./components/Bridge/Bridge.jsx";
 import { AuthContext } from "./AuthContext";
 
 function App() {

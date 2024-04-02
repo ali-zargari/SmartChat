@@ -1,17 +1,16 @@
 import React, { useState } from "react";
 import axios from "axios";
 import "../../styles/Chat.css";
-import { UserManager, Controller } from "../../../backend/controller.js";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { useContext } from "react";
-import { AuthContext } from "../../../AuthContext"; // Update the path
+import { AuthContext } from "../../AuthContext.jsx"; // Update the path
 
 function Chat() {
 	const [message, setMessage] = useState("");
 	const [chatHistory, setChatHistory] = useState([]);
 	const [algorithm, setAlgorithm] = useState("GPT");
-	const controller = new Controller();
+	//const controller = new Controller();
 	const { authToken } = useContext(AuthContext);
 
 	console.log("Access Token: ", authToken);
@@ -33,14 +32,14 @@ function Chat() {
 			let response = "response_string";
 
 			if (algorithm === "GPT") {
-				//response = await axios.post("http://localhost:3001/api/message/GPT", { messages });
-				response = await controller.getGPTResponse(messages);
+				response = await axios.post("http://localhost:3001/api/message/GPT", { messages });
+				//response = await controller.getGPTResponse(messages);
 			} else if (algorithm === "Gemini") {
-				//response = await axios.post("http://localhost:3001/api/message/Gemini", { messages });
-				response = await controller.getGeminiResponse(messages);
+				response = await axios.post("http://localhost:3001/api/message/Gemini", { messages });
+				//response = await controller.getGeminiResponse(messages);
 			} else if (algorithm === "Claude") {
-				//response = await axios.post("http://localhost:3001/api/message/Claude", { messages });
-				response = await controller.getClaudeResponse(messages);
+				response = await axios.post("http://localhost:3001/api/message/Claude", { messages });
+				//response = await controller.getClaudeResponse(messages);
 			}
 
 			//depending on the algorithm, the response will be different

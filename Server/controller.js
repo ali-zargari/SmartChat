@@ -1,11 +1,5 @@
-import { initializeApp } from "firebase/app";
-import "firebase/auth";
-import {
-	getAuth,
-	signInWithEmailAndPassword,
-	createUserWithEmailAndPassword,
-} from "firebase/auth";
 import axios from "axios";
+
 
 class Controller {
 	constructor() {}
@@ -51,7 +45,16 @@ class Controller {
 }
 
 class UserManager {
-	constructor() {}
+
+	constructor() {
+
+
+	}
+
+	signUpUser(req, res) {
+		console.log("signUpUser called");
+	}
+
 }
 
 export { UserManager, Controller };
