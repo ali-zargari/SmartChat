@@ -12,17 +12,14 @@ const Login = () => {
 	const [password, setPassword] = useState("");
 	const authenticator = new Authenticator();
 
-
 	const handleSubmit = (e) => {
 		e.preventDefault();
 
 		const url = authenticator
 			.continueWithGoogle()
 			.then((r) => {
-
 				console.log("url: ", r.data);
 				window.location.href = r.data;
-
 			})
 			.catch((e) => {
 				console.log(e);
@@ -31,17 +28,12 @@ const Login = () => {
 		console.log(url);
 	};
 
-
 	return (
 		<div>
 			<h1>Login Page</h1>
 
 			<form onSubmit={handleSubmit}>
-
-
-
 				<button type="submit">Continue With Google</button>
-
 			</form>
 		</div>
 	);

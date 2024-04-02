@@ -1,112 +1,112 @@
+SET search_path TO smartchat;
 
-
-CREATE TABLE SCUser
-(
-    UID varchar(50),
-    fname varchar(50),
-    lname varchar(50),
-    email varchar(100),
-    password varchar(50),
-    PRIMARY KEY (UID)
-
+-- Table for Users
+CREATE TABLE Users (
+    uid VARCHAR(35) PRIMARY KEY,
+    Name VARCHAR(255),
+    email VARCHAR(255)
 );
 
-CREATE TABLE API_KEY(
-    vendor varchar(20),
-    api_id varchar(300),
-    PRIMARY KEY (api_id)
-
+-- Table for Sessions
+CREATE TABLE Sessions (
+    sid VARCHAR(35) PRIMARY KEY,
+    sname VARCHAR(255)
 );
 
-
-CREATE TABLE Engine(
-    EID varchar(50),
-    AID varchar(300),
-    model varchar(30),
-    PRIMARY KEY (EID),
-    FOREIGN KEY (AID) REFERENCES API_KEY(api_id)
+-- Table for Agents
+CREATE TABLE Agents (
+    aid VARCHAR(35) PRIMARY KEY,
+    current_model VARCHAR(255)
 );
 
-
-CREATE TABLE Message(
-    message_content TEXT,
-    MID varchar(50) UNIQUE,
-    UID varchar(50),
-    EID varchar(50),
-    FOREIGN KEY (UID) REFERENCES SCUser(UID),
-    FOREIGN KEY (EID) REFERENCES Engine(EID)
+-- Table for Engines
+CREATE TABLE Engines (
+    eid VARCHAR(35) PRIMARY KEY,
+    current_model VARCHAR(255),
+    engine_priority VARCHAR(35)
 );
 
-
-CREATE TABLE Session(
-    sname varchar(50),
-    SID varchar(50),
-    PRIMARY KEY (SID)
+-- Table for Messages
+CREATE TABLE Messages (
+    mid VARCHAR(35) PRIMARY KEY,
+    content TEXT,
+    from_user VARCHAR(35), -- Assuming 'from' is reserved, using from_user instead
+    to_agent VARCHAR(35),
+    FOREIGN KEY (from_user) REFERENCES Users(uid),
+    FOREIGN KEY (to_agent) REFERENCES Agents(aid)
 );
 
-CREATE TABLE History(
-    UID varchar(50),
-    EID varchar(50),
-    SID varchar(50),
-    FOREIGN KEY (UID) REFERENCES SCUser(UID),
-    FOREIGN KEY (EID) REFERENCES Engine(EID),
-    FOREIGN KEY (SID) REFERENCES Session(SID)
+-- Table for API_Keys
+CREATE TABLE API_Keys (
+    api_key VARCHAR(255) PRIMARY KEY,
+    model VARCHAR(255),
+    user_id VARCHAR(35),
+    FOREIGN KEY (user_id) REFERENCES Users(uid)
 );
 
 
-CREATE TABLE Generates(
-    UID varchar(50),
-    AID varchar(50),
-    FOREIGN KEY (UID) REFERENCES SCUser(UID),
-    FOREIGN KEY (AID) REFERENCES API_KEY(api_id)
+
+
+
+-- Table for Sessions_Users
+CREATE TABLE Sessions_Users (
+    sid VARCHAR(35),
+    uid VARCHAR(35),
+    PRIMARY KEY (sid, uid),
+    FOREIGN KEY (sid) REFERENCES Sessions(sid),
+    FOREIGN KEY (uid) REFERENCES Users(uid)
 );
 
-CREATE TABLE Responds(
-    EID varchar(50),
-    MID varchar(50),
-    FOREIGN KEY (EID) REFERENCES Engine(EID),
-    FOREIGN KEY (MID) REFERENCES Message(MID)
+-- Table for Sessions_Messages
+CREATE TABLE Sessions_Messages (
+    sid VARCHAR(35),
+    mid VARCHAR(35),
+    PRIMARY KEY (sid, mid),
+    FOREIGN KEY (sid) REFERENCES Sessions(sid),
+    FOREIGN KEY (mid) REFERENCES Messages(mid)
 );
 
-CREATE TABLE Writes(
-    UID varchar(50),
-    MID varchar(50),
-    FOREIGN KEY (UID) REFERENCES SCUser(UID),
-    FOREIGN KEY (MID) REFERENCES Message(MID)
+-- Table for Agents_Messages
+CREATE TABLE Agents_Messages (
+    aid VARCHAR(35),
+    mid VARCHAR(35),
+    PRIMARY KEY (aid, mid),
+    FOREIGN KEY (aid) REFERENCES Agents(aid),
+    FOREIGN KEY (mid) REFERENCES Messages(mid)
 );
 
-CREATE TABLE Starts(
-    UID varchar(50),
-    EID varchar(50),
-    FOREIGN KEY (UID) REFERENCES SCUser(UID),
-    FOREIGN KEY (EID) REFERENCES Engine(EID)
+-- Table for Engines_Agent
+CREATE TABLE Engines_Agent (
+    eid VARCHAR(35),
+    aid VARCHAR(35),
+    PRIMARY KEY (eid, aid),
+    FOREIGN KEY (eid) REFERENCES Engines(eid),
+    FOREIGN KEY (aid) REFERENCES Agents(aid)
 );
 
-CREATE TABLE Remembers(
-    SID varchar(50),
-    MID varchar(50),
-    FOREIGN KEY (SID) REFERENCES Session(SID),
-    FOREIGN KEY (MID) REFERENCES Message(MID)
+-- Engine_APIKeys
+CREATE TABLE Engine_APIKeys (
+    eid VARCHAR(35),
+    api_key VARCHAR(255),
+    PRIMARY KEY (eid, api_key),
+    FOREIGN KEY (eid) REFERENCES Engines(eid),
+    FOREIGN KEY (api_key) REFERENCES API_Keys(api_key)
 );
 
-CREATE TABLE Shows(
-    UID varchar(50),
-    MID varchar(50),
-    FOREIGN KEY (UID) REFERENCES SCUser(UID),
-    FOREIGN KEY (MID) REFERENCES Message(MID)
+-- User_Messages
+CREATE TABLE User_Messages (
+    uid VARCHAR(35),
+    mid VARCHAR(35),
+    PRIMARY KEY (uid, mid),
+    FOREIGN KEY (uid) REFERENCES Users(uid),
+    FOREIGN KEY (mid) REFERENCES Messages(mid)
 );
 
-CREATE TABLE Creates(
-    UID varchar(50),
-    EID varchar(50),
-    FOREIGN KEY (UID) REFERENCES SCUser(UID),
-    FOREIGN KEY (EID) REFERENCES Engine(EID)
-);
-
-CREATE TABLE Uses(
-    EID varchar(50),
-    AID varchar(50),
-    FOREIGN KEY (EID) REFERENCES Engine(EID),
-    FOREIGN KEY (AID) REFERENCES API_KEY(api_id)
-
+-- User_APIKeys
+CREATE TABLE User_APIKeys (
+    uid VARCHAR(35),
+    api_key VARCHAR(255),
+    PRIMARY KEY (uid, api_key),
+    FOREIGN KEY (uid) REFERENCES Users(uid),
+    FOREIGN KEY (api_key) REFERENCES API_Keys(api_key)
 );

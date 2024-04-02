@@ -8,6 +8,8 @@ import session from "express-session";
 import crypto from "crypto";
 import dotenv from "dotenv";
 import { google } from "googleapis";
+import jwt from "jsonwebtoken";
+
 
 dotenv.config();
 
@@ -49,8 +51,6 @@ app.get("/auth/google", (req, res) => {
 	// Construct the OAuth URL or perform any prior logic needed
 	let oauth2Endpoint = "https://accounts.google.com/o/oauth2/v2/auth";
 
-
-
 	const scopes = ["https://www.googleapis.com/auth/drive.metadata.readonly"];
 
 	const authUrl = oauth2Client.generateAuthUrl({
@@ -60,20 +60,46 @@ app.get("/auth/google", (req, res) => {
 	});
 
 	res.json(authUrl);
-
 });
 
 app.post("/auth/google/callback", async (req, res) => {
-	// The `code` is returned as a query parameter in the redirect
-	const code = req.body.code;
-	console.log("req: ", code);
+	try {
+		const code = req.body.code;
 
-	let { tokens } = await oauth2Client.getToken(code);
-	oauth2Client.setCredentials(tokens);
+		// Get tokens with the authorization code from OAuth flow
+		let { tokens } = await oauth2Client.getToken(code);
 
+		// Save tokens in user session for later use
+		//req.session.tokens = tokens;
+		oauth2Client.setCredentials(tokens);
 
-	res.send(tokens);
+		let decoded = jwt.decode(tokens.id_token);
+		console.log("decoded: ", decoded);
 
+		res.status(200).send({ status: 'success', code: decoded});
+	} catch (error) {
+		console.error('Error getting tokens', error);
+		res.status(500).send({ status: 'failure' });
+	}
+});
+
+// A middleware that checks if user is authenticated before accessing any route handlers
+app.use((req, res, next) => {
+	// Ensure user session and tokens exist
+	if (!req.session || !req.session.tokens) {
+		return res.status(401).send({ status: 'error', message: 'unauthorized' });
+	}
+
+	// check if current time is past the token expiry time
+	if (Date.now() > req.session.tokens.expiry_date) {
+		return res.status(401).send({ status: 'error', message: 'access token expired, re-login' });
+	}
+
+	// Set credentials for OAuth2 Client
+	oauth2Client.setCredentials(req.session.tokens);
+
+	// Token is valid, pass control to next route handler
+	next();
 });
 
 app.post("/signup", async (req, res) => {
@@ -82,8 +108,6 @@ app.post("/signup", async (req, res) => {
 	console.log("server.js output: ", req.body.email);
 	//loginWithEmailAndPassword(req, res);
 });
-
-
 
 app.post("/api/message/GPT", async (req, res) => {
 	try {
