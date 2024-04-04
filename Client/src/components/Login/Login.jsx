@@ -1,7 +1,4 @@
 import React, { useState } from "react";
-import { Redirect } from "react-router-dom";
-import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
-import http from "http";
 import axios from "axios";
 
 
@@ -15,7 +12,7 @@ const Login = () => {
 	const handleSubmit = (e) => {
 		e.preventDefault();
 
-		const url = continueWithGoogle()
+		continueWithGoogle()
 			.then((r) => {
 				console.log("url: ", r.data);
 				window.location.href = r.data;
@@ -24,9 +21,6 @@ const Login = () => {
 				console.log(e);
 			});
 
-
-
-		//console.log(url);
 	};
 
 	async function continueWithGoogle() {

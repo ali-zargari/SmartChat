@@ -25,7 +25,6 @@ function App() {
 					<Route path="/login" element={<LoginComponent />} />
 					<Route path="/chat" element={<ChatComponent />} />
 					<Route path="/bridge" element={<Bridge />} />
-					<Route path="*" element={<Navigate to="/login" />} />{" "}
 					{/* default route */}
 				</Routes>
 			</Router>

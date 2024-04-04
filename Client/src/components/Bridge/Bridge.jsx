@@ -18,19 +18,15 @@ export function Bridge() {
 		//console.log(code);
 
 		axios
-			.post("http://localhost:3001/auth/google/callback", { code })
+			.post("http://localhost:3001/auth/google/callback", { code }, { withCredentials: true })
 			.then((response) => {
 				const { token } = response;
 				console.log("HERE, token: ", response);
-				//setAuthToken(token);
+				navigate("/chat");
 			})
 			.catch((error) => {
 				console.error("Error preparing for Google authentication:", error);
 			});
-
-		//TODO
-		// If user has account then route them to their account
-		// If user does not have an account then route them to the signup page
 
 		console.log("code: ", code);
 		console.log("url: ", url);
