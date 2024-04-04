@@ -25,6 +25,7 @@ const getClaudeResponse = require("./Algorithm Handlers/ClaudeHandler.js");
 dotenv.config();
 
 const cors = require("cors");
+const getGPTResponse = require("./Algorithm Handlers/GPTHandler");
 const app = express();
 const PORT = process.env.PORT || 3001;
 const secret = crypto.randomBytes(64).toString("hex");
@@ -86,10 +87,9 @@ app.post("/auth/google/callback", function(req, res) {
 		if (err) {
 			console.error('Error getting tokens', err);
 			return; // Don't send a response here
+
 		} else {
 			req.session.tokens = tokens;
-
-			console.log("req.session.tokens: ", req.session.tokens);
 
 			req.session.save(err => {
 				if (err) {
@@ -109,38 +109,36 @@ app.post("/auth/google/callback", function(req, res) {
 
 app.use(function(req, res, next) {
 	if (!req.session || !req.session.tokens) {
-	//	console.log("req.session: ", req.session);
-	//	console.log("req.session.tokens: ", req.session.tokens);
-	//	return res.status(401).send({ status: 'error', message: 'unauthorized' });
+		//console.log("req.session: ", req.session);
+		//console.log("req.session.tokens: ", req.session.tokens);
+		return res.status(401).send({ status: 'error', message: 'unauthorized' });
 	}
 
-	console.log("req.session.tokens in middleware: ", req.session);
+	//console.log("req.session.tokens in middleware: ", req.session);
 
-	//if (Date.now() > req.session.tokens.expiry_date) {
-	//	return res.status(401).send({ status: 'error', message: 'access token expired, re-login' });
-	//}
+	if (Date.now() > req.session.tokens.expiry_date) {
+		return res.status(401).send({ status: 'error', message: 'access token expired, re-login' });
+	}
 
 	//oauth2Client.setCredentials(req.session.tokens);
-	//next();
+	next();
 });
 
 // Example route to check session persistence
 
 
 app.post("/api/message/GPT", function(req, res) {
-	console.log("req.body: ", req.body);
-
+	getGPTResponse(req.body.messages)
+		.then(response => {
+			console.log("response: ", response);
+			res.json(response);
+		})
+		.catch(error => {
+			console.error("Error fetching response from GPT:", error);
+			res.status(500).json({ error: "Failed to fetch response from GPT" });
+		});
 });
 
-/*
-app.post("/api/message/Gemini", function(req, res) {
-	getGeminiResponse(req.body.messages, function(err, response) {
-		if (err) {
-			return res.status(500).json({ error: "Failed to fetch response from Gemini" });
-		}
-		res.json(response);
-	});
-});*/
 
 app.post("/api/message/Claude", function(req, res) {
 	getClaudeResponse(req.body.messages, function(err, response) {

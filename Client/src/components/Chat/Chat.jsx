@@ -22,16 +22,22 @@ function Chat() {
 			}));
 
 			let r = "response_string";
+			//console.log("algorithm: ", algorithm);
 
 			if (algorithm === "GPT") {
 
+				try {
+					r = await axios.post(
+						"http://localhost:3001/api/message/GPT",
+						{ messages },
+						{ withCredentials: true }
+					);
 
-				r = await axios.post(
-					"http://localhost:3001/api/message/GPT",
-					{ messages },
-					{ withCredentials: true }
-				);
+					//console.log("response: ", r.data.choices[0].message.content);
 
+				} catch (error) {
+					throw error;
+				}
 
 			} else if (algorithm === "Gemini") {
 
@@ -61,14 +67,14 @@ function Chat() {
 
 			}
 
-			//console.log("response: ", response);
+			console.log("response: ", r);
 
 			//depending on the algorithm, the response will be different
 			//if the response is from GPT, the response will be in response.data.choices[0].message.content
 			let responseString = "response_string";
 
 			if (algorithm === "GPT") {
-				//responseString = response.data.choices[0].message.content;
+				responseString = r.data.choices[0].message.content;
 
 				console.log("response.data: ", r);
 			} else if (algorithm === "Gemini") {
