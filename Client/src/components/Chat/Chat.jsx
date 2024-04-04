@@ -1,19 +1,11 @@
 import React, { useState } from "react";
 import axios from "axios";
 import "../../styles/Chat.css";
-import { useNavigate } from "react-router-dom";
-import { useLocation } from "react-router-dom";
-import { useContext } from "react";
-import { AuthContext } from "../../AuthContext.jsx"; // Update the path
 
 function Chat() {
 	const [message, setMessage] = useState("");
 	const [chatHistory, setChatHistory] = useState([]);
 	const [algorithm, setAlgorithm] = useState("GPT");
-	//const controller = new Controller();
-	const { authToken } = useContext(AuthContext);
-
-	console.log("Access Token: ", authToken);
 
 	const sendMessage = async () => {
 		if (message.trim() !== "") {
@@ -29,29 +21,60 @@ function Chat() {
 				content: chat.text,
 			}));
 
-			let response = "response_string";
+			let r = "response_string";
 
 			if (algorithm === "GPT") {
-				response = await axios.post("http://localhost:3001/api/message/GPT", { messages });
-				//response = await controller.getGPTResponse(messages);
+
+
+				r = await axios.post(
+					"http://localhost:3001/api/message/GPT",
+					{ messages },
+					{ withCredentials: true }
+				);
+
+
 			} else if (algorithm === "Gemini") {
-				response = await axios.post("http://localhost:3001/api/message/Gemini", { messages });
-				//response = await controller.getGeminiResponse(messages);
+
+				try {
+					r = await axios.post(
+						"http://localhost:3001/api/message/Gemini",
+						{ messages },
+						{ withCredentials: true }
+					);
+
+				} catch (error) {
+					throw error;
+				}
+
 			} else if (algorithm === "Claude") {
-				response = await axios.post("http://localhost:3001/api/message/Claude", { messages });
-				//response = await controller.getClaudeResponse(messages);
+
+				try {
+					r = await axios.post(
+						"http://localhost:3001/api/message/Claude",
+						{ messages },
+						{ withCredentials: true }
+					);
+
+				} catch (error) {
+					throw error;
+				}
+
 			}
+
+			//console.log("response: ", response);
 
 			//depending on the algorithm, the response will be different
 			//if the response is from GPT, the response will be in response.data.choices[0].message.content
 			let responseString = "response_string";
 
 			if (algorithm === "GPT") {
-				responseString = response.data.choices[0].message.content;
+				//responseString = response.data.choices[0].message.content;
+
+				console.log("response.data: ", r);
 			} else if (algorithm === "Gemini") {
-				responseString = response.data;
+				responseString = r.data;
 			} else if (algorithm === "Claude") {
-				responseString = response.data.content[0].text;
+				responseString = r.data.content[0].text;
 			}
 
 			console.log("responseString: ", responseString);
