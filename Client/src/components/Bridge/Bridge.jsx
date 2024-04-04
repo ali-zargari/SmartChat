@@ -8,14 +8,9 @@ export function Bridge() {
 	const { authToken, setAuthToken } = useContext(AuthContext);
 
 	useEffect(() => {
-		console.log("auth token: ", authToken);
 		const url = window.location.href;
-
 		const urlObj = new URL(url);
-
 		const code = new URLSearchParams(urlObj.search).get("code");
-
-		//console.log(code);
 
 		axios
 			.post("http://localhost:3001/auth/google/callback", { code }, { withCredentials: true })

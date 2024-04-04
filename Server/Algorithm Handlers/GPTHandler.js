@@ -14,6 +14,7 @@ function getGPTResponse(messages) {
 			model: "gpt-3.5-turbo",
 			max_tokens: 2000,
 		}).then(completion => {
+			console.log("OpenAI completion:", completion);
 			resolve(completion);
 		}).catch(error => {
 			console.error("Error calling OpenAI:", error);

@@ -1,10 +1,15 @@
-var Anthropic = require("@anthropic-ai/sdk").default;
+const dotenv = require("dotenv");
+const Anthropic = require("@anthropic-ai/sdk").default;
 
-var anthropic = new Anthropic({
-	apiKey: process.env.ANTHROPIC_API_KEY,
+dotenv.config();
+
+const anthropic = new Anthropic({
+	apiKey: process.env.ANTHROPIC_API_KEY
 });
 
 function getClaudeResponse(messages, callback) {
+	console.log("Requesting Claude response for messages:", messages);
+
 	try {
 		anthropic.messages.create({
 			model: "claude-3-opus-20240229",
