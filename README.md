@@ -1,62 +1,26 @@
-# React + Webpack
+# SmartChat: A Council of AIs
 
-Has all needed configs to start developing react + webpack bundling.
+SmartChat stands as an innovative solution in AI-driven communications, harnessing the advanced capabilities of AI 
+models like GPT, CLAUDE, and GEMINI. Enhanced by the Anthropic AI SDK and Google's Generative AI tools, this platform
+ensures that inquiries are intelligently routed to the most appropriate AI, guaranteeing not only accuracy but also
+contextually relevant responses.
 
-## First time running:
+## Key Features
 
-### Install Node.js
+### Diverse AI Integration
+Utilizes @anthropic-ai/sdk and @google/generative-ai for dynamic collaboration between AI models, providing nuanced
+and comprehensive responses.
 
-### For Windows Users:
+### Advanced Security and Authentication
+Implements robust security measures with bcrypt for secure hashing and passport with passport-google-oauth20 for
+OAuth authentication, ensuring the safeguarding of user data.
 
-    Run these commands one line at a time:
+### Real-time Data Handling
+Leverages axios for efficient, promise-based HTTP requests, facilitating seamless communication with AI APIs for
+prompt responses.
 
-    npm install
-    npm run format
-    npm run lint
+### Scalable Infrastructure
+Built on a solid foundation with express for the server framework, redis for optimized session storage and caching,
+and knex alongside PostgreSQL for robust database management.
 
-    if there are errors, run:
-
-    npm run fix_lint
-
-    or read through the errors and fix them.
-
-    If errors persist, they can be bypassed by removing Linter and Prettier.
-
-### For Mac Users:
-
-    You must:
-
-    1- Modify ".prettierrc" and ".eslintrc.cjs" to make compatible with Mac.
-                              or
-    2- Delete Linter and Prettier libraries.
-
-## Scripts and Commands Reference
-
-### vite:
-
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview",
-
-### webpack:
-
-    "build:webpack": "webpack",
-    "watch:webpack": "webpack --watch",
-    "start:webpack": "webpack serve --open",
-    "server:webpack": "node server.js",
-
-### dist. runner:
-
-    "run_dist": "serve -s dist",
-
-### linting
-
-    "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
-    "fix_lint": "./node_modules/.bin/eslint --fix",
-    "format": "prettier --write \"**/*\""
-
-### example commands:
-
-    npm run dev
-    npm run build
-    npm run build:webpack
+SmartChat is a work in progress.
